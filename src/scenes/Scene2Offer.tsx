@@ -21,7 +21,7 @@ const WifiIcon: React.FC<{size?: number; color?: string}> = ({size = 64, color =
   </svg>
 );
 
-const PlayIcon: React.FC<{size?: number; color?: string}> = ({size = 64, color = COLORS.yellow}) => (
+const PlayIcon: React.FC<{size?: number; color?: string}> = ({size = 64, color = COLORS.red}) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="11" stroke={color} strokeWidth={2} />
     <path d="M10 8.3L16 12L10 15.7V8.3Z" fill={color} />
@@ -170,13 +170,26 @@ export const Scene2Offer: React.FC = () => {
     [0, 1, 0],
     {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}
   );
+  // Onda de choque vermelha que se expande a partir do encaixe dos icones -
+  // reforca o "pop" de impacto junto com o flash branco.
+  const shockwaveProgress = interpolate(
+    frame,
+    [SCENE2.flashStart, SCENE2.flashStart + 10],
+    [0, 1],
+    {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)}
+  );
+  const shockwaveOpacity = interpolate(shockwaveProgress, [0, 0.15, 1], [0, 0.9, 0]);
 
   const highlightOvershoot = spring({
     frame: frame - SCENE2.titleStart - 4,
     fps: 30,
-    config: {damping: 9, mass: 0.5},
+    config: {damping: 7, mass: 0.6, stiffness: 180},
   });
-  const highlightScale = interpolate(highlightOvershoot, [0, 1], [0.6, 1]);
+  const highlightScale = interpolate(highlightOvershoot, [0, 1], [0.3, 1]);
+  // Respiracao continua + brilho pulsante no SKY+ depois que ele assenta -
+  // e o elemento mais "quente" da cena, precisa nunca ficar parado.
+  const skyPulse = 1 + Math.sin(frame / 14) * 0.035;
+  const skyGlow = 24 + Math.sin(frame / 14) * 10;
 
   const cardsBlockOpacity = interpolate(
     frame,
@@ -238,30 +251,51 @@ export const Scene2Offer: React.FC = () => {
             }}
           >
             <span>{scene2Copy.titlePrefix}</span>
-            <span style={{position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 8}}>
+            <span style={{position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 10}}>
               <span style={{transform: `translateX(${wifiX}px)`}}>
-                <WifiIcon />
+                <WifiIcon size={58} />
               </span>
               <span
                 style={{
-                  color: COLORS.cyan,
-                  transform: `scale(${highlightScale})`,
+                  color: COLORS.red,
+                  fontSize: 108,
+                  fontWeight: 800,
+                  letterSpacing: -1,
                   display: 'inline-block',
+                  transform: `scale(${highlightScale * skyPulse})`,
+                  textShadow: `0 0 ${skyGlow}px rgba(255,59,59,0.75), 0 4px 18px rgba(255,59,59,0.4)`,
                 }}
               >
                 {scene2Copy.titleHighlight}
               </span>
               <span style={{transform: `translateX(${playX}px)`}}>
-                <PlayIcon />
+                <PlayIcon size={58} />
               </span>
+              {shockwaveOpacity > 0 && (
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    width: 40,
+                    height: 40,
+                    marginLeft: -20,
+                    marginTop: -20,
+                    borderRadius: '50%',
+                    border: `3px solid ${COLORS.red}`,
+                    opacity: shockwaveOpacity,
+                    transform: `scale(${1 + shockwaveProgress * 7})`,
+                  }}
+                />
+              )}
               {flashOpacity > 0 && (
                 <span
                   style={{
                     position: 'absolute',
-                    inset: -20,
+                    inset: -28,
                     background: COLORS.white,
                     opacity: flashOpacity,
-                    borderRadius: 20,
+                    borderRadius: 24,
                   }}
                 />
               )}
