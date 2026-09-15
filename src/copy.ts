@@ -42,7 +42,7 @@ export const scene3Copy = {
   dateLine1: 'Só até',
   dateLine2: '30 de setembro.',
   dateHighlightWord: '30 de setembro.',
-  countdownDigits: ['3', '6', '5'],
+  countdownDigits: ['0', '1', '5'],
   countdownLabel: 'DIAS PARA APROVEITAR',
   ctaText: 'Comenta COMBO ou chama no link da bio',
   finePrint:
