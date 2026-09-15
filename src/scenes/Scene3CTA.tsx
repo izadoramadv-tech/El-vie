@@ -4,6 +4,7 @@ import {COLORS} from '../theme';
 import {FONT_JOST, FONT_ARCHIVO_BLACK} from '../fonts';
 import {Highlight} from '../components/Highlight';
 import {SafeArea} from '../components/SafeArea';
+import {RibbonBadge} from '../components/RibbonBadge';
 import {scene3Copy, SLOGAN, HANDLE} from '../copy';
 import {SCENE3, SAFE_TOP, SAFE_BOTTOM} from '../timeline';
 
@@ -118,6 +119,15 @@ export const Scene3CTA: React.FC = () => {
       >
         {HANDLE}
       </div>
+
+      {showHero && (
+        <RibbonBadge
+          appearFrame={SCENE3.wipeEnd}
+          style={{top: SAFE_TOP + 32}}
+          sparkBg={COLORS.deepBlue}
+          sparkColor={COLORS.yellow}
+        />
+      )}
 
       {showHero && (
         <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', paddingTop: SAFE_TOP}}>

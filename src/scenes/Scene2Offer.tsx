@@ -4,6 +4,8 @@ import {COLORS} from '../theme';
 import {FONT_JOST, FONT_ARCHIVO_BLACK} from '../fonts';
 import {Highlight} from '../components/Highlight';
 import {Waves} from '../components/Waves';
+import {Confetti} from '../components/Confetti';
+import {RibbonBadge} from '../components/RibbonBadge';
 import {CountUp} from '../components/CountUp';
 import {SafeArea} from '../components/SafeArea';
 import {scene2Copy, HANDLE} from '../copy';
@@ -222,6 +224,7 @@ export const Scene2Offer: React.FC = () => {
   return (
     <AbsoluteFill style={{background: COLORS.blue}}>
       <Waves />
+      <Confetti count={16} opacity={0.35} />
 
       <div
         style={{
@@ -237,8 +240,10 @@ export const Scene2Offer: React.FC = () => {
         {HANDLE}
       </div>
 
+      <RibbonBadge appearFrame={0} style={{top: SAFE_TOP + 32}} />
+
       {frame < SCENE2.cardsRecedeEnd && (
-        <AbsoluteFill style={{alignItems: 'center', paddingTop: SAFE_TOP + 70, opacity: titleOpacity}}>
+        <AbsoluteFill style={{alignItems: 'center', paddingTop: SAFE_TOP + 135, opacity: titleOpacity}}>
           <div
             style={{
               display: 'flex',
