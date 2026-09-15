@@ -1,0 +1,23 @@
+{
+  "name": "elevie-reels-mes-do-cliente",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reels animado 1080x1920 - Elevie+ Mes do Cliente",
+  "scripts": {
+    "start": "remotion studio",
+    "build": "remotion render MainVideo out/elevie-mes-do-cliente.mp4",
+    "still": "remotion still MainVideo out/capa.png --frame=539",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.525",
+    "@remotion/google-fonts": "4.0.525",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.525"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.1",
+    "typescript": "5.5.4"
+  }
+}
