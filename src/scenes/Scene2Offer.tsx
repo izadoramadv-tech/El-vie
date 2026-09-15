@@ -30,6 +30,34 @@ const PlayIcon: React.FC<{size?: number; color?: string}> = ({size = 64, color =
   </svg>
 );
 
+// Icone generico "proibido" - antena ou furadeira riscadas, reforcando a
+// linha "sem antena e sem furacao" com um sinal universal de negacao.
+const NoIcon: React.FC<{size?: number; color?: string; children: React.ReactNode}> = ({
+  size = 56,
+  color = COLORS.white,
+  children,
+}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    {children}
+    <circle cx="12" cy="12" r="10.5" stroke={COLORS.red} strokeWidth={2} />
+    <line x1={5} y1={19} x2={19} y2={5} stroke={COLORS.red} strokeWidth={2} strokeLinecap="round" />
+  </svg>
+);
+
+const AntennaGlyph: React.FC<{color: string}> = ({color}) => (
+  <path
+    d="M12 3L18 10H15V20H9V10H6L12 3Z"
+    fill={color}
+  />
+);
+
+const DrillGlyph: React.FC<{color: string}> = ({color}) => (
+  <path
+    d="M3 9.5L11 9.5L11 7.5L14 7.5L14 9.5L15.5 9.5L15.5 8L18 8L18 11L21 11L21 13L15.5 13L15.5 15.5L14 15.5L14 13L3 13L3 9.5Z"
+    fill={color}
+  />
+);
+
 const PriceCard: React.FC<{
   index: number;
   label: string;
@@ -207,16 +235,30 @@ export const Scene2Offer: React.FC = () => {
     {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}
   );
 
+  // "Sem antena e sem furacao" - beat final, centralizado e com foco total.
   const reinforceOpacity = interpolate(
     frame,
-    [SCENE2.reinforceStart, SCENE2.reinforceStart + 10],
-    [0, 1],
+    [SCENE2.reinforceStart, SCENE2.reinforceStart + 8, SCENE2.reinforceEnd - 8, SCENE2.reinforceEnd],
+    [0, 1, 1, 0],
     {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}
   );
-  const reinforceY = interpolate(frame, [SCENE2.reinforceStart, SCENE2.reinforceStart + 10], [24, 0], {
+  const reinforcePop = spring({
+    frame: frame - SCENE2.reinforceStart,
+    fps: 30,
+    config: {damping: 9, mass: 0.6, stiffness: 170},
+  });
+  const reinforceScale = interpolate(reinforcePop, [0, 1], [0.5, 1]);
+  const reinforcePulse = frame > SCENE2.reinforcePopAt + 14 ? 1 + Math.sin(frame / 15) * 0.025 : 1;
+  const spotlightProgress = interpolate(
+    frame,
+    [SCENE2.reinforceStart, SCENE2.reinforceStart + 14],
+    [0, 1],
+    {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)}
+  );
+  const spotlightOpacity = interpolate(spotlightProgress, [0, 0.3, 1], [0, 0.5, 0]);
+  const iconsOpacity = interpolate(frame, [SCENE2.reinforcePopAt, SCENE2.reinforcePopAt + 8], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
-    easing: Easing.out(Easing.ease),
   });
 
   const cardStarts = [SCENE2.card1Start, SCENE2.card2Start, SCENE2.card3Start];
@@ -229,8 +271,9 @@ export const Scene2Offer: React.FC = () => {
       <div
         style={{
           position: 'absolute',
-          top: SAFE_TOP + 24,
-          right: 32,
+          top: SAFE_TOP + 14,
+          left: '50%',
+          transform: 'translateX(-50%)',
           fontFamily: FONT_JOST,
           fontWeight: 500,
           fontSize: 26,
@@ -240,10 +283,10 @@ export const Scene2Offer: React.FC = () => {
         {HANDLE}
       </div>
 
-      <RibbonBadge appearFrame={0} style={{top: SAFE_TOP + 32}} />
+      <RibbonBadge appearFrame={0} style={{top: SAFE_TOP + 76}} />
 
       {frame < SCENE2.cardsRecedeEnd && (
-        <AbsoluteFill style={{alignItems: 'center', paddingTop: SAFE_TOP + 135, opacity: titleOpacity}}>
+        <AbsoluteFill style={{alignItems: 'center', paddingTop: SAFE_TOP + 179, opacity: titleOpacity}}>
           <div
             style={{
               display: 'flex',
@@ -357,26 +400,55 @@ export const Scene2Offer: React.FC = () => {
       </AbsoluteFill>
 
       {frame >= SCENE2.reinforceStart && (
-        <AbsoluteFill style={{alignItems: 'center', justifyContent: 'flex-end', paddingBottom: 560}}>
+        <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
+          {spotlightOpacity > 0 && (
+            <div
+              style={{
+                position: 'absolute',
+                width: 1100,
+                height: 1100,
+                borderRadius: '50%',
+                opacity: spotlightOpacity,
+                background: `radial-gradient(circle, rgba(255,226,77,0.5) 0%, rgba(255,226,77,0) 70%)`,
+                transform: `scale(${0.3 + spotlightProgress * 0.9})`,
+              }}
+            />
+          )}
+
           <div
             style={{
-              fontFamily: FONT_JOST,
-              fontWeight: 600,
-              fontSize: 44,
-              color: COLORS.white,
               opacity: reinforceOpacity,
-              transform: `translateY(${reinforceY}px)`,
+              transform: `scale(${reinforceScale * reinforcePulse})`,
               textAlign: 'center',
             }}
           >
-            Sem antena e{' '}
-            <Highlight
-              paintStartFrame={SCENE2.reinforceHighlightStart}
-              bgColor={COLORS.yellow}
-              textColor={COLORS.blue}
-            >
-              {scene2Copy.reinforceHighlightWord}
-            </Highlight>
+            <div style={{display: 'flex', gap: 28, justifyContent: 'center', marginBottom: 22, opacity: iconsOpacity}}>
+              <NoIcon>
+                <AntennaGlyph color={COLORS.white} />
+              </NoIcon>
+              <NoIcon>
+                <DrillGlyph color={COLORS.white} />
+              </NoIcon>
+            </div>
+
+            <div style={{fontFamily: FONT_JOST, fontWeight: 700, fontSize: 72, color: COLORS.white, lineHeight: 1.08}}>
+              <Highlight
+                paintStartFrame={SCENE2.reinforceHighlight1Start}
+                bgColor={COLORS.yellow}
+                textColor={COLORS.blue}
+              >
+                {scene2Copy.reinforceLine1}
+              </Highlight>
+            </div>
+            <div style={{fontFamily: FONT_JOST, fontWeight: 700, fontSize: 72, color: COLORS.white, lineHeight: 1.08, marginTop: 4}}>
+              <Highlight
+                paintStartFrame={SCENE2.reinforceHighlight2Start}
+                bgColor={COLORS.yellow}
+                textColor={COLORS.blue}
+              >
+                {scene2Copy.reinforceLine2}
+              </Highlight>
+            </div>
           </div>
         </AbsoluteFill>
       )}

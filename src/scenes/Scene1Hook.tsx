@@ -171,7 +171,8 @@ export const Scene1Hook: React.FC = () => {
         style={{
           position: 'absolute',
           top: SAFE_TOP + 24,
-          right: 32,
+          left: '50%',
+          transform: 'translateX(-50%)',
           fontFamily: FONT_JOST,
           fontWeight: 500,
           fontSize: 26,

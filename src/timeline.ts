@@ -73,10 +73,14 @@ export const SCENE2 = {
   badge1Start: s(3.7),
   badge2Start: s(3.95),
   badgeCountUpDuration: s(0.6),
-  badgesEnd: s(6.0), // 11.0s absoluto
+  badgesEnd: s(5.4), // 10.4s absoluto
 
-  reinforceStart: s(6.0),
-  reinforceHighlightStart: s(6.3),
+  // Beat final da cena - "sem antena e sem furacao" ganha o centro da tela
+  // com foco total (mais tempo de tela do que os outros beats do 1s).
+  reinforceStart: s(5.4),
+  reinforcePopAt: s(5.55),
+  reinforceHighlight1Start: s(5.75),
+  reinforceHighlight2Start: s(6.15),
   reinforceEnd: s(7.0),
 };
 

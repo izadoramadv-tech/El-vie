@@ -104,8 +104,9 @@ export const Scene3CTA: React.FC = () => {
       <div
         style={{
           position: 'absolute',
-          top: SAFE_TOP + 24,
-          right: 32,
+          top: SAFE_TOP + 14,
+          left: '50%',
+          transform: 'translateX(-50%)',
           fontFamily: FONT_JOST,
           fontWeight: 500,
           fontSize: 26,
@@ -118,7 +119,7 @@ export const Scene3CTA: React.FC = () => {
       {showHero && (
         <RibbonBadge
           appearFrame={SCENE3.wipeEnd}
-          style={{top: SAFE_TOP + 32}}
+          style={{top: SAFE_TOP + 76}}
           sparkBg={COLORS.deepBlue}
           sparkColor={COLORS.yellow}
         />

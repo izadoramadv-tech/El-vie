@@ -1,30 +1,31 @@
 # Elévie+ — Reels "Mês do Cliente"
 
 Vídeo vertical animado de 18s (1080×1920, 30fps) para o Reels da Elévie+, feito em
-[Remotion](https://www.remotion.dev) (React + TypeScript).
+[Remotion](https://www.remotion.dev) (React + TypeScript). Sem áudio e sem
+legenda queimada — só o visual.
 
 ## Estrutura
 
 ```
 src/
   timeline.ts        # todas as constantes de tempo (em frames) das 3 cenas
-  copy.ts             # todos os textos: titulos, precos, legendas, letra miuda
+  copy.ts             # todos os textos: titulos, precos, letra miuda
   theme.ts            # paleta de cores oficial
   fonts.ts            # Jost + Archivo Black (self-hosted em public/fonts)
   Root.tsx            # registro da composicao MainVideo
-  MainVideo.tsx        # timeline mestre: encadeia as 3 cenas + audio + legendas
+  MainVideo.tsx        # timeline mestre: encadeia as 3 cenas
   components/
     SafeArea.tsx      # guia visual das areas seguras do Reels (so em modo dev)
-    Caption.tsx       # legenda queimada, terco inferior
     Highlight.tsx     # marca-texto amarelo animado
     Waves.tsx         # ondas concentricas de fundo (cena 2)
+    Confetti.tsx      # particulas sutis nas cores da marca (cena 2)
+    RibbonBadge.tsx   # faixa "Mes do Cliente / Condicao Exclusiva"
     CountUp.tsx       # numero "rodando" (centavos, badges)
   scenes/
     Scene1Hook.tsx    # 0-5s  — gancho
     Scene2Offer.tsx   # 5-12s — oferta (combos + SKY+)
     Scene3CTA.tsx     # 12-18s — chamada para acao + letra miuda
 public/
-  narracao.mp3        # narracao sintetica pt-BR (voz mbrola-br1), 18s - troque pela locucao humana quando gravar
   logo-navy.png        # logo real Elevie+, fundo transparente (usada no frame final)
   logo-white.png        # idem, versao clara para fundos escuros
   fonts/                # Jost + Archivo Black, hospedadas localmente
@@ -46,23 +47,17 @@ base) enquanto edita:
 REMOTION_SHOW_SAFE_AREA=1 npm start
 ```
 
-## Sobre a narração atual
+## Adicionando narração (opcional)
 
-`public/narracao.mp3` já tem uma narração sintética em pt-BR (voz `mbrola-br1`,
-gerada com `espeak-ng`, offline — o ambiente de build não tem acesso a APIs de
-TTS premium tipo Google/Microsoft/ElevenLabs). É robótica, serve como guia de
-ritmo e placeholder, não como voz final de produção.
+O corte atual é mudo, de propósito. Para adicionar áudio depois:
 
-## Como trocar a narração
-
-1. Grave a locução (ver os textos exatos em `src/copy.ts`, nos objetos
-   `scene1Copy`, `scene2Copy`, `scene3Copy` — e no comentário com o roteiro
-   completo acima do array `captions`).
-2. Substitua o arquivo `public/narracao.mp3` pelo áudio real, mantendo o nome
-   do arquivo (ou ajuste o `src` em `src/MainVideo.tsx`).
-3. Se a duração da locução não bater exatamente com os 18s, ajuste os tempos
-   em `src/timeline.ts` (todos os cortes de cena e o array `captions` em
-   `src/copy.ts` dependem dessas constantes).
+1. Coloque o arquivo em `public/` (ex: `narracao.mp3`).
+2. Importe `Audio` e `staticFile` de `remotion` em `src/MainVideo.tsx` e
+   renderize `<Audio src={staticFile('narracao.mp3')} />` dentro do
+   `AbsoluteFill`. O roteiro de referência (texto que cada cena cobre) está
+   comentado em `src/copy.ts`.
+3. Se a locução não bater exatamente com os 18s, ajuste os tempos em
+   `src/timeline.ts` (todos os cortes de cena dependem dessas constantes).
 
 ## Como exportar
 
