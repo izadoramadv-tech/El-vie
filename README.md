@@ -24,9 +24,9 @@ src/
     Scene2Offer.tsx   # 5-12s — oferta (combos + SKY+)
     Scene3CTA.tsx     # 12-18s — chamada para acao + letra miuda
 public/
-  narracao.mp3        # placeholder silencioso de 18s — troque pela locucao real
-  logo-navy.png        # logo Elevie+ (placeholder, fundo transparente)
-  logo-white.png        # idem, versao clara (nao usada no corte atual)
+  narracao.mp3        # narracao sintetica pt-BR (voz mbrola-br1), 18s - troque pela locucao humana quando gravar
+  logo-navy.png        # logo real Elevie+, fundo transparente (usada no frame final)
+  logo-white.png        # idem, versao clara para fundos escuros
   fonts/                # Jost + Archivo Black, hospedadas localmente
 ```
 
@@ -45,6 +45,13 @@ base) enquanto edita:
 ```bash
 REMOTION_SHOW_SAFE_AREA=1 npm start
 ```
+
+## Sobre a narração atual
+
+`public/narracao.mp3` já tem uma narração sintética em pt-BR (voz `mbrola-br1`,
+gerada com `espeak-ng`, offline — o ambiente de build não tem acesso a APIs de
+TTS premium tipo Google/Microsoft/ElevenLabs). É robótica, serve como guia de
+ritmo e placeholder, não como voz final de produção.
 
 ## Como trocar a narração
 
