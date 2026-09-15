@@ -5,7 +5,7 @@ import {FONT_JOST, FONT_ARCHIVO_BLACK} from '../fonts';
 import {Highlight} from '../components/Highlight';
 import {SafeArea} from '../components/SafeArea';
 import {RibbonBadge} from '../components/RibbonBadge';
-import {scene3Copy, SLOGAN, HANDLE} from '../copy';
+import {scene3Copy, HANDLE} from '../copy';
 import {SCENE3, SAFE_TOP, SAFE_BOTTOM} from '../timeline';
 
 const SlotDigit: React.FC<{digit: string; settleFrame: number}> = ({digit, settleFrame}) => {
@@ -89,11 +89,6 @@ export const Scene3CTA: React.FC = () => {
   );
   const logoSpring = spring({frame: frame - SCENE3.logoStart, fps, config: {damping: 13, mass: 0.6}});
   const logoScale = interpolate(logoSpring, [0, 1], [0.7, 1]);
-
-  const sloganOpacity = interpolate(frame, [SCENE3.sloganStart, SCENE3.sloganStart + 12], [0, 1], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
 
   const finePrintOpacity = interpolate(
     frame,
@@ -250,19 +245,7 @@ export const Scene3CTA: React.FC = () => {
       {frame >= SCENE3.logoStart && (
         <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
           <div style={{textAlign: 'center', opacity: logoOpacity, transform: `scale(${logoScale})`}}>
-            <Img src={staticFile('logo-navy.png')} style={{width: 280, height: 'auto'}} />
-            <div
-              style={{
-                marginTop: 28,
-                fontFamily: FONT_JOST,
-                fontWeight: 600,
-                fontSize: 38,
-                color: COLORS.blue,
-                opacity: sloganOpacity,
-              }}
-            >
-              {SLOGAN}
-            </div>
+            <Img src={staticFile('logo-navy.png')} style={{width: 860, height: 'auto'}} />
           </div>
         </AbsoluteFill>
       )}
